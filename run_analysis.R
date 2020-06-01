@@ -1,4 +1,4 @@
-library(dplyr)  
+  library(dplyr)  
   # Loading features names 
   feature_names <- read.table('features.txt')
   # Loading test and train X with column names from feature names
@@ -39,15 +39,20 @@ library(dplyr)
   # (it was not asked, but I think it makes sense)
   Dataset <- cbind(Xmean_std, labels)
   # Save that dataset
-  write.table(Dataset, "Dataset_formatted.txt")
+  write.table(Dataset, row.name=FALSE, "Dataset_formatted.txt")
   
-  # 5) From the data set in step 4, creates a second, independent tidy data set
-  #with the average of each variable for each activity and each subject.
+  # 5) createsdata set with the average of each variable for each activity and each subject.
+  # load subject data 
   train_subject <- read.table('train/subject_train.txt', col.names = c("subject"))
   test_subject <- read.table('test/subject_test.txt', col.names = c("subject"))
   # Combine subjects test set and train set
   subject <- rbind(train_subject, test_subject)
   # Combine subject to Dataset
   Dataset <- cbind(Dataset, subject)
-  
-
+  # Now group by activity and subject
+  D <- tbl_df(Dataset)
+  grouped<-group_by(D, D$activity, D$subject)
+  # then, mean of each activity/subject for all column that are not activity and subject.
+  mean_dataset <- summarise_at(grouped, c(1:73), mean)
+  # Finally, save the dataset as a text file
+  write.table(mean_dataset, row.name=FALSE, "Mean_dataset.txt")
