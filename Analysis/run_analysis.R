@@ -21,7 +21,6 @@
   # 4) Formatting column names.
   colnames(Xmean_std)<- gsub("\\.", "", colnames(Xmean_std))
   colnames(Xmean_std)<- gsub("bodybody", "body", colnames(Xmean_std))
-  print(colnames(Xmean_std))
   
   # 3) labels data formatting
   labels_train <- read.table('train/y_train.txt', col.names = c("activity"))
@@ -51,7 +50,7 @@
   Dataset <- cbind(Dataset, subject)
   # Now group by activity and subject
   D <- tbl_df(Dataset)
-  grouped<-group_by(D, D$activity, D$subject)
+  grouped<-group_by(D, activity, subject)
   # then, mean of each activity/subject for all column that are not activity and subject.
   mean_dataset <- summarise_at(grouped, c(1:73), mean)
   # Finally, save the dataset as a text file
